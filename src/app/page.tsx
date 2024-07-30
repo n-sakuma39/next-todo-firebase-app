@@ -5,8 +5,10 @@ import { authOptions } from "@/app/lib/auth";
 import Header from "@/app/components/Header";
 
 async function getTodos() {
-  // APIのURLが設定されていない場合のフォールバック
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const apiUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.PRODUCTION_API_URL
+      : process.env.DEVELOPMENT_API_URL;
   const res = await fetch(`${apiUrl}/api/todos`, {
     cache: "no-store",
   });
