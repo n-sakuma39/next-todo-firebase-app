@@ -3,4 +3,5 @@ export interface Task {
   text: string;
   progress: number;
   dueDate: string;
+  createdAt: number;
 }

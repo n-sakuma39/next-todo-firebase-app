@@ -5,6 +5,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
 import { Task } from "@/app/types";
@@ -15,18 +16,24 @@ const collectionName = "tasks";
 // Get all todos
 async function getAllTodos(): Promise<Task[]> {
   const querySnapshot = await getDocs(collection(db, collectionName));
-  return querySnapshot.docs.map((doc) => ({
+  const todos = querySnapshot.docs.map((doc) => ({
     id: doc.id,
     text: doc.data().text,
     progress: doc.data().progress,
     dueDate: doc.data().dueDate,
+    createdAt: doc.data().createdAt,
   }));
+  return todos.sort((a, b) => b.createdAt - a.createdAt);
 }
 
 // Add todo
 async function addTodo(todo: Task): Promise<Task> {
-  const docRef = await addDoc(collection(db, collectionName), todo);
-  return { ...todo, id: docRef.id };
+  const todoWithTimestamp = { ...todo, createdAt: Date.now() };
+  const docRef = await addDoc(
+    collection(db, collectionName),
+    todoWithTimestamp
+  );
+  return { ...todoWithTimestamp, id: docRef.id };
 }
 
 // Edit todo
@@ -43,11 +50,16 @@ async function editTodo(
     dueDate: newDueDate.toISOString(),
   };
   await updateDoc(todoRef, updateData);
+
+  const updatedDoc = await getDoc(todoRef);
+  const updatedData = updatedDoc.data();
+
   return {
     id,
     text: newText,
     progress: newProgress,
     dueDate: newDueDate.toISOString(),
+    createdAt: updatedData?.createdAt,
   };
 }
 
@@ -67,7 +79,7 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   const { id } = await request.json();
   await deleteTodo(id);
-  return NextResponse.json({ message: 'Todo deleted successfully' });
+  return NextResponse.json({ message: "Todo deleted successfully" });
 }
 
 // Get

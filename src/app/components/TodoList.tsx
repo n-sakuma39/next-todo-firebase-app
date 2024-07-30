@@ -13,7 +13,9 @@ const TodoList = ({ initialTodos }: TodoListProps) => {
 
   const handleUpdate = (updatedTodo: Task) => {
     setTodos(
-      todos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+      todos
+        .map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+        .sort((a, b) => b.createdAt - a.createdAt)
     );
   };
 
