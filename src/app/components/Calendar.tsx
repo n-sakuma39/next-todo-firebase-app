@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt, FaTimes } from "react-icons/fa";
-import { editTodo } from "@/app/api/todos/route";
 import { Task } from "@/app/types";
 
 interface CalendarProps {
@@ -36,12 +35,22 @@ const Calendar = ({
       const newDate = new Date(date);
       setDueDate(newDate);
       try {
-        const updatedTodo = await editTodo(
-          todoId,
-          todo.text,
-          todo.progress,
-          newDate
-        );
+        const response = await fetch(`/api/todos`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: todoId,
+            text: todo.text,
+            progress: todo.progress,
+            dueDate: newDate,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to update due date");
+        }
+        const updatedTodo = await response.json();
         onUpdate(updatedTodo);
       } catch (error) {
         console.error("Error updating due date: ", error);

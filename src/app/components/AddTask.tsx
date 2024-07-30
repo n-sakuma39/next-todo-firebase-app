@@ -1,6 +1,5 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { addTodo } from "../api/todos/route";
 import { v4 as uuidv4 } from "uuid";
 import { Task } from "@/app/types";
 
@@ -22,9 +21,26 @@ const AddTask = ({ onAdd }: AddTaskProps) => {
       progress: 0,
       dueDate: new Date().toISOString(),
     };
-    await addTodo(newTask);
-    setTaskTitle("");
-    onAdd(newTask);
+
+    try {
+      const response = await fetch("/api/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add task");
+      }
+
+      const addedTask = await response.json();
+      setTaskTitle("");
+      onAdd(addedTask);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Task } from "@/app/types";
-import { deleteTodo, editTodo } from "@/app/api/todos/route";
 import ProgressBar from "@/app/components/ProgressBar";
 import Calendar from "@/app/components/Calendar";
 
@@ -41,12 +40,22 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
 
   const handleSave = async () => {
     try {
-      const updatedTodo = await editTodo(
-        todo.id,
-        editTitle,
-        editProgress,
-        dueDate
-      );
+      const response = await fetch(`/api/todos`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: todo.id,
+          text: editTitle,
+          progress: editProgress,
+          dueDate: dueDate
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update todo');
+      }
+      const updatedTodo = await response.json();
       setIsEditing(false);
       setIsEditingProgress(false);
       setProgress(editProgress);
@@ -61,7 +70,16 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
 
   const handleDelete = async () => {
     try {
-      await deleteTodo(todo.id);
+      const response = await fetch(`/api/todos`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: todo.id }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete todo');
+      }
       onDelete(todo.id);
     } catch (error) {
       console.error("Error deleting document: ", error);

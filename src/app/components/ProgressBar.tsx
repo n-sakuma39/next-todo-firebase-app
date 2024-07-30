@@ -4,7 +4,7 @@ interface ProgressBarProps {
   progress: number;
 }
 
-const ProgressBar = ({ progress }: ProgressBarProps) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
   return (
     <div className="w-full">
       <div
