@@ -121,7 +121,7 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
         disabled={isEditing || isEditingProgress}
       />
       <div className="flex items-center mb-2">
-        <span className="mr-3">進捗率：</span>
+        <span className="mr-1 inline-block">進捗率：</span>
         {isEditingProgress ? (
           <>
             <input
@@ -145,7 +145,7 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
             %
           </>
         ) : (
-          <span>{progress}%</span>
+          <span>{progress} %</span>
         )}
       </div>
       <ProgressBar progress={progress} />

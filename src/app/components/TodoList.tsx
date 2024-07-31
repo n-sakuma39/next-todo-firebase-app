@@ -29,7 +29,7 @@ const TodoList = ({ initialTodos }: TodoListProps) => {
 
   return (
     <div className="w-full max-w-xl items-center justify-center mt-5">
-      <div className="w-full px-8 py-6 bg-white shadow-md rounded-lg">
+      <div className="w-full px-4 py-5 md:px-8 md:py-7 bg-white shadow-md rounded-lg">
         <AddTask onAdd={handleAdd} />
         <ul className="space-y-5">
           {todos.map((todo) => (
