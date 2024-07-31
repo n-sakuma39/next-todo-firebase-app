@@ -16,9 +16,7 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
   const [editTitle, setEditTitle] = useState(todo.text);
   const [progress, setProgress] = useState(todo.progress);
   const [isEditingProgress, setIsEditingProgress] = useState(false);
-  const [editProgress, setEditProgress] = useState<number | string>(
-    todo.progress
-  );
+  const [editProgress, setEditProgress] = useState<number>(todo.progress);
   const [dueDate, setDueDate] = useState(
     todo.dueDate ? new Date(todo.dueDate) : new Date()
   );
@@ -134,15 +132,13 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
               value={editProgress}
               onFocus={(e) => {
                 if (e.target.value === "0") {
-                  setEditProgress("");
+                  setEditProgress(0);
                 }
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = convertToHalfWidth(e.target.value);
                 const numericValue = value.replace(/[^0-9]/g, "");
-                setEditProgress(
-                  numericValue === "" ? "" : Number(numericValue)
-                );
+                setEditProgress(numericValue === "" ? 0 : Number(numericValue));
               }}
             />
             %
