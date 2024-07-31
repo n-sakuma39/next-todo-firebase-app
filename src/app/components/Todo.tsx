@@ -16,10 +16,18 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
   const [editTitle, setEditTitle] = useState(todo.text);
   const [progress, setProgress] = useState(todo.progress);
   const [isEditingProgress, setIsEditingProgress] = useState(false);
-  const [editProgress, setEditProgress] = useState(todo.progress);
+  const [editProgress, setEditProgress] = useState<number | string>(
+    todo.progress
+  );
   const [dueDate, setDueDate] = useState(
     todo.dueDate ? new Date(todo.dueDate) : new Date()
   );
+
+  const convertToHalfWidth = (str: string) => {
+    return str.replace(/[０-９]/g, function (s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
+    });
+  };
 
   useEffect(() => {
     if (isEditing) {
@@ -88,48 +96,23 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
 
   return (
     <li
-      className="p-3 md:p-4 bg-white border-l-4 border-blue-500 rounded shadow-md relative"
+      className="p-3 md:p-4 bg-white border-l-4 border-blue-500 rounded shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.08),0_4px_8px_-1px_rgba(0,0,0,0.08)] relative"
       key={todo.id}
     >
-      <div className="flex md:justify-between items-center mb-4 flex-col md:flex-row">
+      <div className="mb-4">
         {isEditing ? (
           <input
             ref={ref}
             type="text"
-            className="md:mr-3 py-1 px-2 rounded border-gray-400 border w-full md:w-[340px]"
+            className="py-1 px-2 rounded border-gray-400 border w-full"
             value={editTitle}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setEditTitle(e.target.value)
             }
           />
         ) : (
-          <span className="mr-3 md:max-w-[340px]">{todo.text}</span>
+          <p>{todo.text}</p>
         )}
-
-        <div className="flex items-center w-full md:w-auto mt-5 md:mt-0 justify-center">
-          {isEditing || isEditingProgress ? (
-            <button
-              className="bg-blue-500 mr-1 text-sm md:mr-3 px-3 py-1 text-white rounded w-1/3 md:w-auto"
-              onClick={handleSave}
-            >
-              保存
-            </button>
-          ) : (
-            <button
-              className="bg-green-700 mr-1 md:mr-3 px-3 py-1 text-white rounded text-sm w-1/3 md:w-auto"
-              onClick={handleEdit}
-            >
-              編集
-            </button>
-          )}
-
-          <button
-            className="bg-red-600 text-sm px-3 py-1 text-white rounded w-1/3 md:w-auto"
-            onClick={handleDelete}
-          >
-            削除
-          </button>
-        </div>
       </div>
       <Calendar
         dueDate={dueDate}
@@ -139,20 +122,28 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
         todo={todo}
         disabled={isEditing || isEditingProgress}
       />
-      <div className="flex items-center">
+      <div className="flex items-center mb-2">
         <span className="mr-3">進捗率：</span>
         {isEditingProgress ? (
           <>
             <input
-              type="number"
-              className="w-16 border px-2 py-1 rounded"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              className="w-16 border px-2 mr-2 rounded no-spinners"
               value={editProgress}
-              onFocus={(e) => e.target.select()}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEditProgress(Number(e.target.value))
-              }
-              min="0"
-              max="100"
+              onFocus={(e) => {
+                if (e.target.value === "0") {
+                  setEditProgress("");
+                }
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = convertToHalfWidth(e.target.value);
+                const numericValue = value.replace(/[^0-9]/g, "");
+                setEditProgress(
+                  numericValue === "" ? "" : Number(numericValue)
+                );
+              }}
             />
             %
           </>
@@ -161,6 +152,30 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
         )}
       </div>
       <ProgressBar progress={progress} />
+      <div className="flex items-center w-full md:w-auto mt-5 justify-center">
+        {isEditing || isEditingProgress ? (
+          <button
+            className="bg-blue-500 hover:bg-blue-400 mr-1 md:mr-3 px-3 py-2 text-white rounded w-1/3 md:w-1/5"
+            onClick={handleSave}
+          >
+            保存
+          </button>
+        ) : (
+          <button
+            className="bg-green-700 hover:bg-green-600 mr-1 md:mr-3 px-3 py-2 text-white rounded w-1/3 md:w-1/5"
+            onClick={handleEdit}
+          >
+            編集
+          </button>
+        )}
+
+        <button
+          className="bg-red-600 hover:bg-red-500 px-3 py-2 text-white rounded w-1/3 md:w-1/5"
+          onClick={handleDelete}
+        >
+          削除
+        </button>
+      </div>
     </li>
   );
 };

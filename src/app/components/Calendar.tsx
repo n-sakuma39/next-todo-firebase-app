@@ -63,7 +63,7 @@ const Calendar = ({
     <div className="flex items-center mb-2 relative justify-end">
       <div
         className={`text-right text-blue-800 font-bold flex items-center cursor-pointer bg-blue-50 p-2 text-sm rounded ${
-          disabled ? "opacity-50 cursor-not-allowed" : ""
+          disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => !disabled && setShowDatePicker(true)}
