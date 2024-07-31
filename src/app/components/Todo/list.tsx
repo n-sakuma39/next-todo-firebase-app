@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Task } from "@/app/types";
 import Todo from "@/app/components/Todo";
-import AddTask from "./AddTask";
+import AddTask from "@/app/components/AddTask";
 
 interface TodoListProps {
   initialTodos: Task[];
