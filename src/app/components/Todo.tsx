@@ -138,7 +138,8 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = convertToHalfWidth(e.target.value);
                 const numericValue = value.replace(/[^0-9]/g, "");
-                setEditProgress(numericValue === "" ? 0 : Number(numericValue));
+                const progressValue = Math.min(Number(numericValue), 100);
+                setEditProgress(numericValue === "" ? 0 : progressValue);
               }}
             />
             %
