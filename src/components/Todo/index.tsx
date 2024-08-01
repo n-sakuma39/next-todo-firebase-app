@@ -5,7 +5,7 @@ import ProgressBar from "@/components/Todo/progress";
 import Calendar from "@/components/Todo/calendar";
 import TodoActions from "@/components/Todo/button";
 import TodoTitle from "@/components/Todo/todotitle";
-
+import { getSession } from "next-auth/react";
 interface TodoProps {
   todo: Task;
   onUpdate: (updatedTodo: Task) => void;
@@ -35,7 +35,10 @@ const Todo = ({ todo, onUpdate, onDelete }: TodoProps) => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`/api/todos`, {
+      const session = await getSession();
+      const apiUrl =
+        session?.user?.role === "admin" ? "/api/todos" : "/api/usertodos";
+      const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

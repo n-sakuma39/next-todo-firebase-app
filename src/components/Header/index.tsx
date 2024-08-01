@@ -4,7 +4,7 @@ import React from "react";
 const Header = () => {
   return (
     <header className="container mx-auto">
-      <div className="flex justify-between items-center py-3 px-4">
+      <div className="flex justify-between items-center py-3">
         <h1 className="text-2xl font-bold">MY TODO APP</h1>
         <Link
           href="/signout"

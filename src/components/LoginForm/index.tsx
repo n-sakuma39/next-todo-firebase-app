@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import CredentialsForm from "./CredentialsForm";
 import SocialLoginButtons from "./SocialLoginButtons";
 import Divider from "./Divider";
@@ -24,8 +24,19 @@ export const LoginForm = () => {
 
       if (response?.error) {
         setError("IDとパスワードが一致しません");
+        console.log("ログイン失敗:", response.error);
       } else if (response?.ok) {
-        router.push("/");
+        const session = await getSession();
+        console.log("ログイン成功:", session);
+        console.log("ユーザー役割:", session?.user?.role);
+        
+        if (session?.user?.role === "admin") {
+          console.log("管理者としてログイン");
+          window.location.href = "/dashboard";
+        } else {
+          console.log("一般ユーザーとしてログイン");
+          window.location.href = "/";
+        }
       }
     } catch (err) {
       console.error("ログイン中にエラーが発生:", err);

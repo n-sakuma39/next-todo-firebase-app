@@ -20,7 +20,6 @@
 - next-auth 4.24.7
 - react-datepicker 7.3.0
 - react-hook-form 7.52.1
-- uuid 10.0.0
 - zod 3.23.8
 
 ## 実装機能
