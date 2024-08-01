@@ -15,6 +15,7 @@
 
 - @hookform/resolvers 3.9.0
 - @types/react-icons 3.0.0
+- shadcn/ui
 - firebase 10.12.4
 - next-auth 4.24.7
 - react-datepicker 7.3.0
@@ -27,7 +28,7 @@
 - タスクの追加、編集、削除（データベース保存）
 - タスクの進捗状況の管理
 - タスクの期限設定（カレンダー選択）
-- ユーザー認証
+- ユーザー認証（指定ID/PW、GitHub、Google）
 
 ## コメント
 
