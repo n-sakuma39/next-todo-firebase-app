@@ -7,7 +7,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
+import { db } from "@/lib/firebase";
 import { Task } from "@/app/types";
 import { NextResponse } from "next/server";
 

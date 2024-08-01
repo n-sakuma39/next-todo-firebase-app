@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import TodoList from "@/components/Todo/list";
-import { authOptions } from "@/app/lib/auth";
+import { authOptions } from "@/lib/auth";
 import Header from "@/components/Header";
 
 async function getTodos() {
