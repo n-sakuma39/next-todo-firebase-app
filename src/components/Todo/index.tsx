@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Task } from "@/app/types";
-import ProgressBar from "@/app/components/Todo/progress";
-import Calendar from "@/app/components/Todo/calendar";
-import TodoActions from "@/app/components/Todo/button";
-import TodoTitle from "@/app/components/Todo/todotitle";
+import ProgressBar from "@/components/Todo/progress";
+import Calendar from "@/components/Todo/calendar";
+import TodoActions from "@/components/Todo/button";
+import TodoTitle from "@/components/Todo/todotitle";
 
 interface TodoProps {
   todo: Task;

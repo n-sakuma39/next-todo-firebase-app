@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Task } from "@/app/types";
-import Todo from "@/app/components/Todo";
-import AddTask from "@/app/components/AddTask";
+import Todo from "@/components/Todo";
+import AddTask from "@/components/AddTask";
 
 interface TodoListProps {
   initialTodos: Task[];

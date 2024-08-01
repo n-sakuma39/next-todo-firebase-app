@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
-import TodoList from "@/app/components/Todo/list";
+import TodoList from "@/components/Todo/list";
 import { authOptions } from "@/app/lib/auth";
-import Header from "@/app/components/Header";
+import Header from "@/components/Header";
 
 async function getTodos() {
   const apiUrl =
