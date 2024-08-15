@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
 const loginSchema = z.object({
-  id: z.string().min(1, "IDは必須です"),
+  email: z.string().email("有効なメールアドレスを入力してください").min(1, "メールアドレスは必須です"),
   password: z.string().min(6, "パスワードは6文字以上である必要があります"),
 });
 
@@ -41,14 +41,14 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className="mb-7">
       <div className="mb-4">
         <Label
-          htmlFor="id"
+          htmlFor="email"
           className="mb-2 block text-sm text-muted-foreground"
         >
-          ID
+          メールアドレス
         </Label>
-        <Input {...register("id")} type="text" id="id" />
-        {errors.id && (
-          <p className="text-red-500 text-sm mt-1">{errors.id.message}</p>
+        <Input {...register("email")} type="email" id="email" />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
         )}
       </div>
       <div className="mb-5 relative">

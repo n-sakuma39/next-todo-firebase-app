@@ -11,25 +11,25 @@ export const LoginForm = () => {
   const router = useRouter();
 
   const handleCredentialsLogin = async (data: {
-    id: string;
+    email: string;
     password: string;
   }) => {
     setError("");
     try {
       const response = await signIn("credentials", {
         redirect: false,
-        id: data.id,
+        email: data.email,
         password: data.password,
       });
 
       if (response?.error) {
-        setError("IDとパスワードが一致しません");
+        setError("メールアドレスとパスワードが一致しません");
         console.log("ログイン失敗:", response.error);
       } else if (response?.ok) {
         const session = await getSession();
         console.log("ログイン成功:", session);
         console.log("ユーザー役割:", session?.user?.role);
-        
+
         if (session?.user?.role === "admin") {
           console.log("管理者としてログイン");
           window.location.href = "/dashboard";
@@ -50,7 +50,7 @@ export const LoginForm = () => {
         Welcome Todo App
       </h1>
       <p className="text-sm text-muted-foreground mb-7 text-center">
-        指定のIDとPWを入力するか
+        指定のメールアドレスとパスワードを入力するか
         <br />
         SNSアカウントでログインしてください。
       </p>

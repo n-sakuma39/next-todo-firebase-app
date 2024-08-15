@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { DefaultSession } from "next-auth";
+import { auth } from "@/lib/firebaseAdmin";
+import bcrypt from "bcryptjs";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -22,25 +24,39 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        id: { label: "Id", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.id || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
+        // 管理者用の認証
         if (
-          credentials.id === process.env.NEXTAUTH_ADMIN_ID &&
+          credentials.email === process.env.NEXTAUTH_ADMIN_EMAIL &&
           credentials.password === process.env.NEXTAUTH_ADMIN_PW
         ) {
           return { id: "1", name: "管理者", role: "admin" };
-        } else if (
-          credentials.id === process.env.NEXTAUTH_GUEST_ID &&
-          credentials.password === process.env.NEXTAUTH_GUEST_PW
-        ) {
-          return { id: "2", name: "ゲストユーザー", role: "guest" };
         }
+
+        // Firebase Authenticationのユーザー認証
+        try {
+          const userRecord = await auth.getUserByEmail(credentials.email);
+          if (userRecord.passwordHash) {
+            const isPasswordValid = await bcrypt.compare(credentials.password, userRecord.passwordHash);
+
+            if (isPasswordValid) {
+              return { id: userRecord.uid, name: userRecord.displayName, role: "user" };
+            }
+          } else {
+            console.error("Password hash is missing for user:", credentials.email);
+          }
+        } catch (error) {
+          console.error("Firebase authentication error:", error);
+          return null;
+        }
+
         return null;
       },
     }),
